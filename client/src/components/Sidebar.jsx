@@ -7,7 +7,6 @@ const menuItems = [
   { icon: '📊', label: 'Dashboard', path: '/dashboard' },
   { icon: '📁', label: 'Projects', path: null },
   { icon: '✓', label: 'Tasks', path: null },
-  { icon: '⚙️', label: 'Settings', path: null },
   { icon: '👥', label: 'Teams', path: null },
   { icon: '🎯', label: 'Goals', path: null },
 ];
@@ -66,6 +65,12 @@ export default function Sidebar() {
 
       {/* Logout Button */}
       <div className="border-t border-slate-700 p-4">
+        <button
+          className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-blue-900/20 hover:text-blue-400"
+        >
+          <span className="text-xl">⚙️</span>
+          {isOpen && <span className="text-sm font-medium">Settings</span>}
+        </button>
         <button
           onClick={handleLogout}
           className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-slate-300 transition hover:bg-red-900/20 hover:text-red-400"

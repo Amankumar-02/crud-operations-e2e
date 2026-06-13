@@ -1,11 +1,24 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
 const parseResponse = async (response) => {
-  const data = await response.json();
-  if (!response.ok) {
-    const message = data?.error || 'An unexpected error occurred.';
-    throw new Error(message);
+  let data = null;
+  try {
+    data = await response.json();
+  } catch (e) {
+    // non-JSON response
+    const text = await response.text().catch(() => null);
+    if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText} - ${text || 'no body'}`);
+    return text;
   }
+
+  if (!response.ok) {
+    const message = data?.error || data?.message || `HTTP ${response.status} ${response.statusText}`;
+    const err = new Error(message);
+    err.status = response.status;
+    err.payload = data;
+    throw err;
+  }
+
   return data;
 };
 

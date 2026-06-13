@@ -6,6 +6,7 @@ import TaskForm from '../components/TaskForm.jsx';
 import TaskCard from '../components/TaskCard.jsx';
 import TaskFilters from '../components/TaskFilters.jsx';
 import { createTask, getTasks, updateTask, deleteTask } from '../utils/taskService.js';
+import { getUserFromToken } from '../utils/authService.js';
 
 export default function Dashboard() {
   const { isOpen } = useContext(SidebarContext);
@@ -20,8 +21,12 @@ export default function Dashboard() {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    const user = getUserFromToken();
+    if (user) setCurrentUser(user);
+
     const loadTasks = async () => {
       setIsLoading(true);
       try {
@@ -107,7 +112,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-slate-950">Dashboard</h1>
-              <p className="mt-1 text-slate-600">Manage and track your tasks</p>
+              <p className="mt-1 text-slate-600">Manage and track your tasks{currentUser?.name ? ` — Welcome, ${currentUser.name}` : ''}</p>
             </div>
             <button
               onClick={handleOpenModal}
