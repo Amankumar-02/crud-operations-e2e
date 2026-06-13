@@ -1,9 +1,12 @@
 import express from 'express';
-import {createUser, getUsers} from '../controllers/userController.js';
+import { signupUser, loginUser, logoutUser, getUsers } from '../controllers/userController.js';
+import { disallowAuthenticated, authenticateUser } from '../middlewares/authMiddleware.js';
 
 const userRouter = express.Router();
 
-userRouter.post('/', createUser);
-userRouter.get('/', getUsers);
+userRouter.post('/signup', disallowAuthenticated, signupUser);
+userRouter.post('/login', disallowAuthenticated, loginUser);
+userRouter.post('/logout', authenticateUser, logoutUser);
+userRouter.get('/', authenticateUser, getUsers);
 
 export default userRouter;

@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import createError from 'http-errors';
 import morgan from "morgan";
 import userRouter from './routes/userRouter.js';
+import taskRouter from './routes/taskRouter.js';
 
 export const app = express();
 export const port = process.env.PORT || 5000;
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", userRouter);
+app.use("/api/tasks", taskRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
