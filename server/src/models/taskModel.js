@@ -1,5 +1,23 @@
 import mongoose from 'mongoose';
 
+const commentSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 const taskSchema = new mongoose.Schema(
   {
     user: {
@@ -42,6 +60,7 @@ const taskSchema = new mongoose.Schema(
       enum: ['pending', 'in-progress', 'completed'],
       default: 'pending',
     },
+    comments: [commentSchema],
   },
   {
     timestamps: true,
