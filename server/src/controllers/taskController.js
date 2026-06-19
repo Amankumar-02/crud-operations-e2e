@@ -33,7 +33,7 @@ export const getTasks = async (req, res) => {
 
 export const getTaskById = async (req, res) => {
   try {
-    const task = await Task.findOne({ _id: req.params.id, user: req.user._id });
+    const task = await Task.findById(req.params.id).populate('comments.user', 'name email');
     if (!task) {
       return res.status(404).json({ error: 'Task not found.' });
     }
@@ -67,6 +67,34 @@ export const updateTask = async (req, res) => {
     res.status(200).json(task);
   } catch (error) {
     res.status(400).json({ error: error.message || 'Unable to update task.' });
+  }
+};
+
+export const addTaskComment = async (req, res) => {
+  try {
+    const { content } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ error: 'Comment content is required.' });
+    }
+
+    const task = await Task.findById(req.params.id);
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found.' });
+    }
+
+    task.comments.push({
+      user: req.user._id,
+      content: content.trim(),
+    });
+
+    await task.save();
+    await task.populate('comments.user', 'name email');
+
+    const savedComment = task.comments[task.comments.length - 1];
+    res.status(201).json(savedComment);
+  } catch (error) {
+    res.status(400).json({ error: error.message || 'Unable to add comment.' });
   }
 };
 
