@@ -5,6 +5,7 @@ import {
   getTaskById,
   updateTask,
   deleteTask,
+  addTaskComment,
 } from '../controllers/taskController.js';
 import { authenticateUser } from '../middlewares/authMiddleware.js';
 
@@ -13,6 +14,7 @@ const taskRouter = express.Router();
 taskRouter.use(authenticateUser);
 
 taskRouter.post('/', createTask);
+taskRouter.post('/:id/comments', addTaskComment);
 taskRouter.get('/', getTasks);
 taskRouter.get('/:id', getTaskById);
 taskRouter.put('/:id', updateTask);
